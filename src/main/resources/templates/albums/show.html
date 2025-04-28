@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" class="h-100">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Album: ' + ${album.title}">Dettaglio Album</title>
+    <th:block th:replace="~{fragments/resources :: headResources}"></th:block>
+</head>
+
+<body class="d-flex flex-column min-vh-100 text-white" style="background-color: #212529ef;">
+    <th:block th:replace="~{fragments/navbar :: nav}"></th:block>
+
+    <main class="flex-grow-1 container mt-5">
+
+        <div class="container mt-5">
+            <h1 th:text="${album.title}">Titolo Album</h1>
+
+            <div class="row mt-4">
+                <!-- Copertina -->
+                <div class="col-md-4">
+                    <img th:src="${album.coverUrl}" class="img-fluid rounded shadow" alt="Copertina Album">
+                </div>
+
+                <!-- Dettagli -->
+                <div class="col-md-8">
+                    <p><strong>Descrizione:</strong></p>
+                    <p th:text="${album.description}">Descrizione album...</p>
+
+                    <p><strong>Anno di uscita:</strong>
+                        <span th:text="${album.releaseDate.year}">2025</span>
+                    </p>
+
+                    <p><strong>Artisti:</strong>
+                        <span th:each="artist : ${album.artists}" class="badge bg-primary me-1"
+                            th:text="${artist.name}">Artista</span>
+                    </p>
+
+                    <p><strong>Generi:</strong>
+                        <span th:each="genre : ${album.genres}" class="badge bg-secondary me-1"
+                            th:text="${genre.name}">Genere</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Lista delle canzoni -->
+            <h2 class="mt-5">Canzoni</h2>
+            <div class="list-group mt-3">
+                <a th:each="song : ${album.songs}" th:href="@{/songs/{id}(id=${song.id})}"
+                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white border-dark">
+                    <span th:text="${song.title}">Titolo Canzone</span>
+                    <small th:text="${song.duration + ' sec'}">180 sec</small>
+                </a>
+            </div>
+
+        </div>
+    </main>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+    <th:block th:replace="~{fragments/resources :: scripts}"></th:block>
+</body>
+
+</html>

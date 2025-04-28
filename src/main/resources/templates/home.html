@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="h-100">
+<head>
+    <title>Home - Libreria Musicale</title>
+    <th:block th:replace="~{fragments/resources :: headResources}"></th:block>
+</head>
+<body class="d-flex flex-column min-vh-100 text-white" style="background-color: #212529ef;">
+
+    <!-- Navbar -->
+    <th:block th:replace="~{fragments/navbar :: nav}"></th:block>
+
+    <!-- Contenuto principale -->
+    <main class="flex-grow-1 container mt-5">
+        <div class="card bg-dark text-white shadow p-4">
+            <h1 class="display-4">Benvenuto!</h1>
+            <p class="lead">Questa è la tua libreria musicale personale.</p>
+            <a th:href="@{/login}" class="btn btn-primary mt-3">Accedi</a>
+        </div>
+    </main>
+
+    <!-- Footer sempre in fondo -->
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+    <th:block th:replace="~{fragments/resources :: scripts}"></th:block>
+</body>
+</html>

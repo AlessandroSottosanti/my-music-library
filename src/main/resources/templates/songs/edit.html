@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="h-100">
+
+<head>
+    <th:block th:replace="~{fragments/resources :: headResources}"></th:block>
+</head>
+
+<body class="d-flex flex-column min-vh-100 text-white" style="background-color: #212529ef;">
+    <nav th:replace="~{fragments/navbar :: nav}"></nav>
+
+    <main class="flex-grow-1 container py-5">
+
+        <div class="container">
+            <!-- Titolo dinamico -->
+            <h1 class="mt-4 mb-4" th:text="'Edit Song'"></h1>
+
+            <!-- Include il form fragment per la modifica -->
+            <th:block th:replace="~{fragments/create-edit-form :: form(
+        song=${song},
+        action=@{/songs/edit/{id}(id=${song.id})},
+        isEdit=true
+    )}"></th:block>
+
+            <div class="mt-3">
+                <a th:href="@{/songs}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+
+    </main>
+    
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+    <th:block th:replace="~{fragments/resources :: scripts}"></th:block>
+</body>
+
+</html>

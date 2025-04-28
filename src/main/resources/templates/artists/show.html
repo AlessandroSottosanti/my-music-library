@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="h-100">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettaglio Artista</title>
+    <th:block th:replace="~{fragments/resources :: headResources}"></th:block>
+</head>
+
+<body class="d-flex flex-column min-vh-100 text-white" style="background-color: #212529ef;">
+    <th:block th:replace="~{fragments/navbar :: nav}"></th:block>
+
+    <main class="flex-grow-1 container">
+
+    <div class="container my-5">
+
+        <!-- Dettagli artista -->
+        <div class="mb-5">
+            <h1 th:text="${artist.name}">Nome Artista</h1>
+            <p><strong>Biografia:</strong> <span th:text="${artist.biography}">Descrizione artista</span></p>
+            <!-- Aggiungi altri dettagli se li hai -->
+        </div>
+
+        <!-- Album associati -->
+        <h2>Album</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mt-3">
+            <div class="col" th:each="album : ${artist.albums}">
+                <div class="card bg-dark text-white h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title" th:text="${album.title}">Titolo Album</h5>
+                        <p class="card-text mt-auto">
+                            Anno: <span th:text="${album.releaseDate.year}">2025</span>
+                        </p>
+                        <a th:href="@{/albums/{id}(id=${album.id})}" class="btn btn-primary mt-2">Vedi dettagli</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    </main>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+    <th:block th:replace="~{fragments/resources :: scripts}"></th:block></body>
+</html>

@@ -1,0 +1,27 @@
+<!-- src/main/resources/templates/fragments/song_card.html -->
+<div th:fragment="song_card(song)" class="col">
+    <div class="card bg-dark text-white h-100 shadow-sm border-0"
+         th:attr="onclick=|window.location.href='/songs/${song.id}'|"
+         style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
+        <img src="https://via.placeholder.com/300x200.png?text=Copertina" class="card-img-top" alt="Copertina">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${song.title}">Titolo</h5>
+            <!-- Action Buttons -->
+            <div class="mt-2 d-flex justify-content-end">
+                 <a th:href="@{/songs/edit/{id}(id=${song.id})}"
+                    class="btn btn-sm btn-outline-primary me-2"
+                    onclick="event.stopPropagation();">Edit</a>
+                 <form th:action="@{/songs/delete/{id}(id=${song.id})}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this song?');">
+                     <button type="submit" class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation();">Delete</button>
+                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+</style>

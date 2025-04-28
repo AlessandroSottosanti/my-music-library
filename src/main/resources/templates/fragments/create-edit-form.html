@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body class="d-flex flex-column min-vh-100 text-white" style="background-color: #212529ef;">
+
+    <form th:action="${action}" th:object="${song}" method="post">
+        <!-- Titolo della canzone -->
+        <div class="form-group">
+            <label for="title">Titolo</label>
+            <input type="text" th:field="*{title}" id="title" class="form-control" />
+        </div>
+
+        <!-- Durata -->
+        <div class="form-group">
+            <label for="duration">Durata</label>
+            <input type="number" th:field="*{duration}" id="duration" class="form-control" />
+        </div>
+
+        <!-- Album -->
+        <div class="form-group">
+            <label for="album">Album</label>
+            <select th:field="*{album}" id="album" class="form-control">
+                <option th:each="album : ${albums}" th:value="${album.id}" 
+                        th:text="${album.title}" 
+                        th:selected="${album.id == song.album.id}"></option>
+            </select>
+        </div>
+
+        <!-- Artista -->
+        <div class="form-group">
+            <label for="artist">Artista</label>
+            <select th:field="*{artist}" id="artist" class="form-control">
+                <option th:each="artist : ${artists}" th:value="${artist.id}" 
+                        th:text="${artist.name}" 
+                        th:selected="${artist.id == song.artist.id}"></option>
+            </select>
+        </div>
+
+        <!-- Bottoni -->
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+    </form>
+
+</body>
+
+</html>

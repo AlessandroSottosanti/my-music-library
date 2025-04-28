@@ -1,0 +1,53 @@
+<!-- NAVBAR -->
+<nav th:fragment="nav" class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+    <div class="container">
+      <a class="navbar-brand" th:href="@{/}">
+        <i class="fas fa-music me-2"></i>MyMusicLibrary
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/}">Home</a>
+          </li>
+          <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+            <a class="nav-link" th:href="@{/songs}">Canzoni</a>
+          </li>
+          <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+            <a class="nav-link" th:href="@{/artists}">Artisti</a>
+          </li>
+          <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+            <a class="nav-link" th:href="@{/albums}">Album</a>
+          </li>
+          <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+            <a class="nav-link" th:href="@{/genres}">Generi</a>
+          </li>
+        </ul>
+  
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+            <a class="nav-link" th:href="@{/profile}">
+              <i class="fas fa-user-circle me-1"></i>Profilo
+            </a>
+          </li>
+          <li class="nav-item d-flex align-items-center" th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="post" class="d-inline">
+              <button type="submit" class="btn btn-outline-light btn-sm">
+                <i class="fas fa-sign-out-alt me-1"></i>Logout
+              </button>
+            </form>
+          </li>
+          <li class="nav-item" th:if="${#authorization.expression('isAnonymous()')}">
+            <a class="nav-link" th:href="@{/login}">
+              <i class="fas fa-sign-in-alt me-1"></i>Login
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
