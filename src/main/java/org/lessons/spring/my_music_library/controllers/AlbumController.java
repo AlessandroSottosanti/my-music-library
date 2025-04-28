@@ -9,12 +9,14 @@ import org.lessons.spring.my_music_library.repositories.ArtistRepository;
 import org.lessons.spring.my_music_library.repositories.GenreRepository;
 import org.lessons.spring.my_music_library.repositories.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequestMapping("/albums")
@@ -43,10 +45,21 @@ public class AlbumController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Integer id, Model model) {
-        Album album = albumRepository.findById(id).get();
-        model.addAttribute("album" ,album);
+        Album album = albumRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found"));
+
+        model.addAttribute("album", album);
         return "albums/show";
     }
-    
-    
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Integer id) {
+        albumRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found"));
+
+
+        albumRepository.deleteById(id);
+        return "redirect:/albums";
+    }
+
 }

@@ -2,6 +2,7 @@ package org.lessons.spring.my_music_library.controllers;
 
 import java.util.List;
 
+import org.lessons.spring.my_music_library.models.Album;
 import org.lessons.spring.my_music_library.models.Artist;
 import org.lessons.spring.my_music_library.models.Song;
 import org.lessons.spring.my_music_library.repositories.AlbumRepository;
@@ -75,7 +76,8 @@ public class SongController {
     @GetMapping("/create")
     public String create(Model model) {
         Song song = new Song();
-
+        List<Album> albums = albumRepository.findAll();
+        model.addAttribute("albums", albums);
         model.addAttribute("song", song);
         model.addAttribute("type", "create");
         model.addAttribute("formAction", "/songs/create");
@@ -98,7 +100,8 @@ public class SongController {
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
-        Song song = songRepository.findById(id).get();
+        Song song = songRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
                 
         model.addAttribute("song", song);
         model.addAttribute("artists", artistRepository.findAll());
@@ -109,7 +112,6 @@ public class SongController {
         return "songs/create-update";
     }
 
-    // UPDATE route (POST)
     @PostMapping("/edit/{id}")
     public String update(
             @PathVariable("id") Integer id,
@@ -117,7 +119,6 @@ public class SongController {
             BindingResult bindingResult,
             Model model) {
 
-        // Fetch the original song to keep its ID (optional, but good practice)
          songRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
 
@@ -128,29 +129,18 @@ public class SongController {
             return "songs/create-update";
         }
 
-        // Set the ID from the path variable onto the form data before saving
         songForm.setId(id);
         songRepository.save(songForm);
-
-        // Optionally add a flash message for success feedback
-        // redirectAttributes.addFlashAttribute("message", "Song updated successfully!");
 
         return "redirect:/songs/" + id;
     }
 
-    // DELETE route (POST)
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Integer id) {
-        // Check if song exists before deleting
+    public String delete(@PathVariable Integer id) {
         songRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
-        
-        songRepository.deleteById(id);
-        
-        // Optionally add a flash message for success feedback
-        // redirectAttributes.addFlashAttribute("message", "Song deleted successfully!");
 
+        songRepository.deleteById(id);
         return "redirect:/songs";
     }
-
 }
