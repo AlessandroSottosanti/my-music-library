@@ -76,20 +76,20 @@ public class SongController {
     @GetMapping("/create")
     public String create(Model model) {
         Song song = new Song();
-        List<Album> albums = albumRepository.findAll();
-        model.addAttribute("albums", albums);
         model.addAttribute("song", song);
-        model.addAttribute("type", "create");
         model.addAttribute("formAction", "/songs/create");
-
-        return "songs/create-update";
+        model.addAttribute("isEdit", false);
+        model.addAttribute("albums", albumRepository.findAll());
+        model.addAttribute("artists", artistRepository.findAll());
+        model.addAttribute("genres", genreRepository.findAll());
+        return "songs/create";
     }
 
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute("song") Song song, BindingResult bindingResult, Model model) { // Removed
                                                                                                               // comma
         if (bindingResult.hasErrors()) {
-            return "songs/create-update";
+            return "songs/create";
         }
         songRepository.save(song);
 
@@ -102,14 +102,15 @@ public class SongController {
     public String edit(@PathVariable("id") Integer id, Model model) {
         Song song = songRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
-                
+
         model.addAttribute("song", song);
         model.addAttribute("artists", artistRepository.findAll());
         model.addAttribute("genres", genreRepository.findAll());
+        model.addAttribute("albums", albumRepository.findAll());
         model.addAttribute("album", song.getAlbum());
-        model.addAttribute("type", "update");
+        model.addAttribute("isEdit", true);
         model.addAttribute("formAction", "/songs/edit/" + id);
-        return "songs/create-update";
+        return "songs/edit";
     }
 
     @PostMapping("/edit/{id}")
@@ -119,14 +120,14 @@ public class SongController {
             BindingResult bindingResult,
             Model model) {
 
-         songRepository.findById(id)
+        songRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
 
         if (bindingResult.hasErrors()) {
 
             model.addAttribute("artists", artistRepository.findAll());
             model.addAttribute("genres", genreRepository.findAll());
-            return "songs/create-update";
+            return "songs/edit";
         }
 
         songForm.setId(id);

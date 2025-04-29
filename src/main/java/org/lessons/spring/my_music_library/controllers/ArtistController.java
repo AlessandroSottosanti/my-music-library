@@ -66,7 +66,7 @@ public class ArtistController {
     public String create(Model model) {
         Artist newArtist = new Artist();
 
-        model.addAttribute("newArtist" ,newArtist);
+        model.addAttribute("artist" ,newArtist);
         return "artists/create";
     }
 
@@ -77,7 +77,7 @@ public class ArtistController {
         }
         artistRepository.save(artist);
         model.addAttribute("message", "Artist created successfully!");
-        return "redirect:/artist/" + artist.getId();
+        return "redirect:/artists/" + artist.getId();
     }
     
 

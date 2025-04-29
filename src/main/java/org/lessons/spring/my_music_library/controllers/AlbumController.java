@@ -17,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("/albums")
@@ -51,6 +53,15 @@ public class AlbumController {
         model.addAttribute("album", album);
         return "albums/show";
     }
+
+    @GetMapping("/create")
+    public String create(Model model) {
+        Album newAlbum = new Album();
+        
+        model.addAttribute("album" , newAlbum);
+        return "albums/create";
+    }
+    
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {

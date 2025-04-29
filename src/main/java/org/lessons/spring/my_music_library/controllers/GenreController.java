@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -42,7 +40,7 @@ public class GenreController {
     @GetMapping("/create")
     public String create(Model model) {
         Genre newGenre = new Genre();
-        model.addAttribute("newGenre", newGenre);
+        model.addAttribute("genre", newGenre);
         return "genres/create";
     }
     
@@ -79,7 +77,7 @@ public class GenreController {
     public String delete(@PathVariable Integer id) {
         genreRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found"));
-            
+
         genreRepository.deleteById(id);
         return "redirect:/genres";
     }

@@ -19,26 +19,26 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests()
                 .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/songs/**").hasAnyAuthority("USER", "ADMIN")
-                .requestMatchers("/artists/**").hasAnyAuthority("USER", "ADMIN")
-                .requestMatchers("/albums/**").hasAnyAuthority("USER", "ADMIN")
+                .requestMatchers("/songs/**", "/artists/**", "/albums/**", "/genres/**").hasAuthority("ADMIN")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
             .and()
             .formLogin()
-                .defaultSuccessUrl("/albums", true)  // dopo login porta qui SEMPRE
+                .defaultSuccessUrl("/albums", true)
                 .permitAll()
             .and()
             .logout()
                 .permitAll()
             .and()
             .exceptionHandling()
+                .accessDeniedPage("/error/403")  // <-- questa è la riga importante
             .and()
             .csrf().disable();
 
+
         return http.build();
     }
-
 
     @Bean
     DaoAuthenticationProvider authenticationProvider() {

@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<th:block th:fragment="form (song, action, isEdit, albums, artists, genres)">
+    <form th:action="@{${action}}" th:object="${song}" method="post" class="needs-validation" novalidate>
 
-<body class="d-flex flex-column min-vh-100 text-white" style="background-color: #212529ef;">
-
-    <form th:action="${action}" th:object="${song}" method="post">
-        <!-- Titolo della canzone -->
-        <div class="form-group">
-            <label for="title">Titolo</label>
-            <input type="text" th:field="*{title}" id="title" class="form-control" />
+        <!-- Titolo -->
+        <div class="mb-3">
+            <label for="title" class="form-label">Titolo</label>
+            <input type="text" th:field="*{title}" class="form-control" required />
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Errore titolo</div>
         </div>
 
         <!-- Durata -->
-        <div class="form-group">
-            <label for="duration">Durata</label>
-            <input type="number" th:field="*{duration}" id="duration" class="form-control" />
+        <div class="mb-3">
+            <label for="duration" class="form-label">Durata (secondi)</label>
+            <input type="number" th:field="*{duration}" class="form-control" required min="10" max="900"/>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}">Errore durata</div>
+        </div>
+
+        <!-- Cover URL -->
+        <div class="mb-3">
+            <label for="coverUrl" class="form-label">URL Copertina</label>
+            <input type="url" th:field="*{coverUrl}" class="form-control"/>
         </div>
 
         <!-- Album -->
-        <div class="form-group">
-            <label for="album">Album</label>
-            <select th:field="*{album}" id="album" class="form-control">
-                <option th:each="album : ${albums}" th:value="${album.id}" 
-                        th:text="${album.title}" 
-                        th:selected="${album.id == song.album.id}"></option>
+        <div class="mb-3">
+            <label for="album" class="form-label"></label>
+            <select th:field="*{album}" class="form-select">
+                <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.title}">Album</option>
             </select>
         </div>
 
         <!-- Artista -->
-        <div class="form-group">
-            <label for="artist">Artista</label>
-            <select th:field="*{artist}" id="artist" class="form-control">
-                <option th:each="artist : ${artists}" th:value="${artist.id}" 
-                        th:text="${artist.name}" 
-                        th:selected="${artist.id == song.artist.id}"></option>
+        <div class="mb-3">
+            <label for="artist" class="form-label">Artista</label>
+            <select th:field="*{artist}" class="form-select">
+                <option th:each="artist : ${artists}" th:value="${artist.id}" th:text="${artist.name}">Artista</option>
             </select>
         </div>
 
-        <!-- Bottoni -->
-        <div class="form-group mt-3">
-            <button type="submit" class="btn btn-primary">Salva</button>
+        <!-- Generi -->
+        <div th:each="genre : ${genres}" class="form-check mb-3">
+            <input class="form-check-input" type="checkbox"
+                   th:field="*{genres}" th:value="${genre.id}" th:id="|genre-${genre.id}|" />
+            <label class="form-check-label" th:for="|genre-${genre.id}|" th:text="${genre.name}">Genere</label>
+        </div>
+
+        <!-- Pulsanti -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary" th:text="${isEdit} ? 'Salva modifiche' : 'Crea canzone'"></button>
         </div>
     </form>
-
+</th:block>
 </body>
-
 </html>
