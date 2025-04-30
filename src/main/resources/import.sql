@@ -1,17 +1,11 @@
 -- ruoli
-INSERT INTO roles (id, name) VALUES 
-(1, 'ADMIN'),
-(2, 'USER');
+INSERT INTO roles (id, name) VALUES (1, 'ADMIN'),(2, 'USER');
 
 -- utenti
-INSERT INTO users (id, username, password) VALUES 
-(1, 'adminuser', '{noop}admin123'),
-(2, 'regularuser', '{noop}user123');
+INSERT INTO users (id, username, password) VALUES (1, 'adminuser', '{noop}admin123'),(2, 'regularuser', '{noop}user123');
 
 -- Associazione ruoli-utenti nella tabella ponte
-INSERT INTO role_user (user_id, role_id) VALUES 
-(1, 1), 
-(2, 2); 
+INSERT INTO role_user (user_id, role_id) VALUES (1, 1), (2, 2); 
 
 
 -- GENRES

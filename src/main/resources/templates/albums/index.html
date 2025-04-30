@@ -20,11 +20,11 @@
                     <i class="bi bi-plus-circle"></i> + Aggiungi Album
                 </a>
             </div>
-        
+
             <div th:each="artist : ${artists}" class="mb-5">
 
                 <h2 th:text="${artist.name}" class="mb-4 border-bottom pb-2"></h2>
-        
+
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
                     <div class="col" th:each="album : ${artist.albums}">
                         <div class="card h-100 shadow-sm bg-dark text-light">
@@ -33,15 +33,28 @@
                                 <p class="card-text mt-auto">
                                     Anno: <span th:text="${album.releaseDate.year}">2025</span>
                                 </p>
-                                <a th:href="@{/albums/{id}(id=${album.id})}" class="btn btn-primary mt-2">Vedi dettagli</a>
+                                <a th:href="@{/albums/{id}(id=${album.id})}" class="btn btn-primary mt-2">Vedi
+                                    dettagli</a>
+                                <a th:href="@{/albums/edit/{id}(id=${album.id})}"
+                                    class="btn btn-warning mt-2">Modifica</a>
+
+                                <form th:action="@{/albums/delete/{id}(id=${album.id})}" method="post"
+                                    th:object="${album}" class="d-inline mt-2">
+                                    <input type="hidden" name="_method" value="delete" />
+                                    <button type="submit" class="btn btn-danger mt-2"
+                                        onclick="return confirm('Sei sicuro di voler eliminare questo album?');">
+                                        Elimina
+                                    </button>
+                                </form>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        
+
         </div>
-        
+
     </main>
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
     <th:block th:replace="~{fragments/resources :: scripts}"></th:block>

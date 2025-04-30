@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Modifica Album</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100 text-white" style="background-color: #212529ef;">
+    <th:block th:replace="~{fragments/navbar :: nav}"></th:block>
+    <div class="container mt-4">
+        <h2>Modifica Album</h2>
+
+        <form th:action="@{'/albums/edit/' + ${album.id}}" th:object="${album}" method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">Titolo</label>
+                <input type="text" th:field="*{title}" class="form-control">
+                <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Descrizione</label>
+                <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="releaseDate" class="form-label">Data di rilascio</label>
+                <input type="date" th:field="*{releaseDate}" class="form-control">
+                <div class="text-danger" th:if="${#fields.hasErrors('releaseDate')}" th:errors="*{releaseDate}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="coverUrl" class="form-label">URL Copertina</label>
+                <input type="text" th:field="*{coverUrl}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Artisti</label>
+                <div th:each="artist : ${artists}" class="form-check">
+                    <input type="checkbox" class="form-check-input" th:id="'artist_' + ${artist.id}"
+                        th:value="${artist.id}" th:field="*{artists}">
+                    <label class="form-check-label" th:for="'artist_' + ${artist.id}" th:text="${artist.name}"></label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Generi</label>
+                <div th:each="genre : ${genres}" class="form-check">
+                    <input type="checkbox" class="form-check-input" th:id="'genre_' + ${genre.id}"
+                        th:value="${genre.id}" th:field="*{genres}">
+                    <label class="form-check-label" th:for="'genre_' + ${genre.id}" th:text="${genre.name}"></label>
+                </div>
+            </div>
+
+            <!-- Sezione per modificare / aggiungere canzoni -->
+            <div id="songs-section" class="my-4 p-3 border rounded">
+                <input type="hidden" name="_anchor" value="songs-section" />
+
+                <h4>Modifica Canzoni dell'Album</h4>
+                <div th:each="song, stat : *{getSongs()}" class="mb-3 p-2 border-bottom">
+                    <h5>Canzone #<span th:text="${stat.count}"></span></h5>
+
+                    <div class="mb-2">
+                        <label th:for="|songTitle${stat.index}|" class="form-label">Titolo Canzone</label>
+                        <input type="text" th:field="*{songs[__${stat.index}__].title}" class="form-control"
+                            th:id="|songTitle${stat.index}|">
+                        <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].title')}"
+                            th:errors="*{songs[__${stat.index}__].title}"></div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label th:for="|songDuration${stat.index}|" class="form-label">Durata (secondi)</label>
+                        <input type="number" th:field="*{songs[__${stat.index}__].duration}" class="form-control"
+                            min="10" max="900" th:id="|songDuration${stat.index}|">
+                        <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].duration')}"
+                            th:errors="*{songs[__${stat.index}__].duration}"></div>
+                    </div>
+
+                    <input type="hidden" th:field="*{songs[__${stat.index}__].id}" />
+                </div>
+
+                <button type="submit" name="action" value="addSong" class="btn btn-outline-light mt-3">
+                    Aggiungi Canzone
+                </button>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Aggiorna</button>
+            <a th:href="@{/albums}" class="btn btn-secondary">Annulla</a>
+        </form>
+    </div>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+    <th:block th:replace="~{fragments/resources :: scripts}"></th:block>
+</body>
+
+</html>

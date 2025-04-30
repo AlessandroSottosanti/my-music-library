@@ -2,6 +2,7 @@ package org.lessons.spring.my_music_library.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Il titolo dell'album è obbligatorio")
+    @NotBlank(message = "Il titolo dell' album è obbligatorio")
     @Size(max = 100, message = "Il titolo dell'album non può superare i 100 caratteri")
     private String title;
 
@@ -30,12 +31,19 @@ public class Album {
     @Column(name = "cover_url")
     private String coverUrl;
 
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval=true helps clean up songs if removed from the list
     @JsonIgnore
+    @Valid // Enable validation for nested Song objects
     private List<Song> songs;
 
-    @ManyToMany(mappedBy = "albums")
+    @ManyToMany
+    @JoinTable(
+        name = "album_artist",
+        joinColumns = @JoinColumn(name = "album_id"),
+        inverseJoinColumns = @JoinColumn(name = "artist_id")
+    )
     private List<Artist> artists;
+    
 
     @ManyToMany
     @JoinTable(
@@ -108,5 +116,12 @@ public class Album {
 
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
+    }
+
+    public String getArtistsAsString() {
+        if (artists == null || artists.isEmpty()) {
+            return "";
+        }
+        return artists.toString().replaceAll("[\\[\\]]", "");
     }
 }

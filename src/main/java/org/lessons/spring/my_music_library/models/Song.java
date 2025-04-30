@@ -1,7 +1,6 @@
 package org.lessons.spring.my_music_library.models;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -28,9 +27,6 @@ public class Song {
     @Min(value = 10, message = "La durata deve essere di almeno 10 secondi")
     @Max(value = 900, message = "La durata non può superare i 15 minuti (900 secondi)")
     private Integer duration;
-
-    @Column(name = "cover_url")
-    private String coverUrl;
 
     @ManyToOne
     @JoinColumn(name = "album_id")
@@ -77,14 +73,6 @@ public class Song {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
-    }
-
-    public String getCoverUrl() {
-        return this.coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
     }
 
     public Album getAlbum() {

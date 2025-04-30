@@ -27,14 +27,9 @@ public class Artist {
     @Pattern(regexp = "^(http|https)://.*", message = "Inserisci un URL valido per l'immagine", flags = Pattern.Flag.CASE_INSENSITIVE)
     private String imageUrl;
 
-    @ManyToMany
-    @JsonManagedReference
-    @JoinTable( 
-        name = "album_artist",
-        joinColumns = @JoinColumn(name = "artist_id"),
-        inverseJoinColumns = @JoinColumn(name = "album_id")
-        )
+    @ManyToMany(mappedBy = "artists")
     private List<Album> albums;
+    
 
     // Getters & Setters
     public Integer getId() {
