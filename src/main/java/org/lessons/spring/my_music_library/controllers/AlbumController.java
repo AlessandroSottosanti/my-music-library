@@ -67,49 +67,85 @@ public class AlbumController {
         Album newAlbum = new Album();
         // Initialize with a few empty songs for the form
         List<Song> initialSongs = new ArrayList<>();
-        for (int i = 0; i < 3; i++) { // Start with 3 empty song slots
-            initialSongs.add(new Song());
-        }
+        Integer removeSongIndex = null;
+
+        initialSongs.add(new Song());
+
         newAlbum.setSongs(initialSongs);
 
         model.addAttribute("album", newAlbum);
         model.addAttribute("artists", artistRepository.findAll());
         model.addAttribute("genres", genreRepository.findAll());
+        model.addAttribute("NumberOfSongs", 1);
+        model.addAttribute("removeSongIndex", removeSongIndex);
         return "albums/create";
     }
 
     @PostMapping("/create")
-    public String store(@Valid @ModelAttribute("album") Album albumForm, BindingResult bindingResult, Model model) {
+    public String store(@Valid @ModelAttribute("album") Album albumForm,
+                BindingResult bindingResult,
+                @RequestParam(value = "action", required = false) String action,
+                @RequestParam(value = "removeSongIndex", required = false) Integer removeSongIndex,
+                Model model) {
+    
+        if (action != null && action.startsWith("removeSong")) {
+            int index = Integer.parseInt(action.substring("removeSong".length()));
+            if (index >= 0 && index < albumForm.getSongs().size()) {
+                albumForm.getSongs().remove(index);
+            }
+    
+            model.addAttribute("album", albumForm);
+            model.addAttribute("artists", artistRepository.findAll());
+            model.addAttribute("genres", genreRepository.findAll());
+            return "albums/create";
+        }
+    
+        if ("addSong".equals(action)) {
+            albumForm.getSongs().add(new Song()); // Aggiungi una nuova riga vuota
+    
+            model.addAttribute("album", albumForm);
+            model.addAttribute("artists", artistRepository.findAll());
+            model.addAttribute("genres", genreRepository.findAll());
+            return "albums/create";
+        }
+    
+        // Assegna gli artisti alle canzoni
+        if (albumForm.getArtists() != null && !albumForm.getArtists().isEmpty()) {
+            for (Song song : albumForm.getSongs()) {
+                song.setArtists(albumForm.getArtists());
+                song.setAlbum(albumForm);
+            }
+        }
+    
+        // Verifica eventuali errori di validazione
         if (bindingResult.hasErrors()) {
             model.addAttribute("album", albumForm);
             model.addAttribute("artists", artistRepository.findAll());
             model.addAttribute("genres", genreRepository.findAll());
             return "albums/create";
         }
-
-        // Process submitted songs: set the album reference and filter out empty ones
-        List<Song> submittedSongs = albumForm.getSongs();
-        if (submittedSongs != null) {
-            List<Song> validSongs = submittedSongs.stream()
-                .filter(song -> song.getTitle() != null && !song.getTitle().isBlank() && song.getDuration() != null) // Basic check for valid song data
-                .peek(song -> song.setAlbum(albumForm)) // Set the album reference
-                .collect(Collectors.toList());
-            albumForm.setSongs(validSongs);
-        } else {
-            albumForm.setSongs(new ArrayList<>());
-        }
-
-
+    
+        // Salva l'album e le canzoni con gli artisti associati
         albumRepository.save(albumForm);
-
+    
         return "redirect:/albums/" + albumForm.getId();
     }
+    
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
         Album album = albumRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
 
+        // Se getSongs() è null, inizializza la lista
+        if (album.getSongs() == null) {
+            album.setSongs(new ArrayList<>());
+        }
+
+        // Se la lista è vuota, aggiungi una canzone vuota per la modifica
+        if (album.getSongs().isEmpty()) {
+            album.getSongs().add(new Song());
+        }
         model.addAttribute("album", album);
         model.addAttribute("genres", genreRepository.findAll());
         model.addAttribute("artists", artistRepository.findAll());
@@ -117,27 +153,47 @@ public class AlbumController {
     }
 
     @PostMapping("/edit/{id}")
-    public String update(
-            @PathVariable("id") Integer id,
+    public String update(@PathVariable("id") Integer id,
             @Valid @ModelAttribute("album") Album albumForm,
             BindingResult bindingResult,
+            @RequestParam(value = "action", required = false) String action,
             Model model) {
 
-        albumRepository.findById(id)
+        Album existingAlbum = albumRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
 
-        if (bindingResult.hasErrors()) {
+        if ("addSong".equals(action)) {
+            albumForm.getSongs().add(new Song());
+        }
 
+        if (action != null && action.startsWith("removeSong")) {
+            int index = Integer.parseInt(action.substring("removeSong".length()));
+            if (index >= 0 && index < albumForm.getSongs().size()) {
+                albumForm.getSongs().remove(index); // Rimuovi la canzone
+            }
+            return "albums/edit";
+        }
+
+        // Assegna l'album a ogni canzone nel form
+        for (Song song : albumForm.getSongs()) {
+            song.setAlbum(albumForm); // Associa l'album alla canzone
+        }
+
+        if (bindingResult.hasErrors()) {
             model.addAttribute("album", albumForm);
             model.addAttribute("artists", artistRepository.findAll());
             model.addAttribute("genres", genreRepository.findAll());
-            return "album/edit";
+            return "albums/edit";
         }
 
-        albumForm.setId(id);
-        albumRepository.save(albumForm);
+        // Aggiorna le informazioni dell'album
+        existingAlbum.setTitle(albumForm.getTitle());
+        existingAlbum.setDescription(albumForm.getDescription());
+        existingAlbum.setReleaseDate(albumForm.getReleaseDate());
+        existingAlbum.setCoverUrl(albumForm.getCoverUrl());
 
-        return "redirect:/albums/" + id;
+        albumRepository.save(existingAlbum);
+        return "redirect:/albums/" + existingAlbum.getId();
     }
 
     @PostMapping("/delete/{id}")

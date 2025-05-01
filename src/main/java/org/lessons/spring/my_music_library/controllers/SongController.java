@@ -64,12 +64,19 @@ public class SongController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Integer id, HttpServletRequest request, Model model) {
-        Song song = songRepository.findById(id).get();
+        // Recupera la canzone dal repository
+        Song song = songRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
+
+        // Recupera l'album associato alla canzone
+
+        // Aggiungi gli attributi al modello
         model.addAttribute("song", song);
-        model.addAttribute("artist", song.getArtist());
-        model.addAttribute("album", song.getAlbum());
+        model.addAttribute("album", song.getAlbum()); // Aggiungi album al modello
+        model.addAttribute("artist", song.getArtists());
         model.addAttribute("genres", song.getGenresAsString());
         model.addAttribute("currentUri", request.getRequestURI());
+
         return "songs/show";
     }
 
@@ -80,21 +87,23 @@ public class SongController {
         model.addAttribute("formAction", "/songs/create");
         model.addAttribute("isEdit", false);
         model.addAttribute("albums", albumRepository.findAll());
-        model.addAttribute("artists", artistRepository.findAll());
+        model.addAttribute("artists", artistRepository.findAll()); // assicurati che ci sia
         model.addAttribute("genres", genreRepository.findAll());
         return "songs/create";
     }
 
     @PostMapping("/create")
-    public String store(@Valid @ModelAttribute("song") Song song, BindingResult bindingResult, Model model) { // Removed
-                                                                                                              // comma
+    public String store(@Valid @ModelAttribute("song") Song song, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("albums", albumRepository.findAll());
+            model.addAttribute("artists", artistRepository.findAll());
+            model.addAttribute("genres", genreRepository.findAll());
+            model.addAttribute("formAction", "/songs/create");
+            model.addAttribute("isEdit", false);
             return "songs/create";
         }
+
         songRepository.save(song);
-
-        model.addAttribute("message", "Song created successfully!");
-
         return "redirect:/songs/" + song.getId();
     }
 
@@ -119,23 +128,24 @@ public class SongController {
             @Valid @ModelAttribute("song") Song songForm,
             BindingResult bindingResult,
             Model model) {
-
+    
         songRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Song not found"));
-
+    
         if (bindingResult.hasErrors()) {
-
+            model.addAttribute("albums", albumRepository.findAll());
             model.addAttribute("artists", artistRepository.findAll());
             model.addAttribute("genres", genreRepository.findAll());
+            model.addAttribute("formAction", "/songs/edit/" + id);
+            model.addAttribute("isEdit", true);
             return "songs/edit";
         }
-
+    
         songForm.setId(id);
         songRepository.save(songForm);
-
         return "redirect:/songs/" + id;
     }
-
+    
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
         songRepository.findById(id)

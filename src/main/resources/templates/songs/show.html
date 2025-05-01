@@ -16,30 +16,42 @@
             </div>
             <div class="card-body px-4 py-3" style="background-color: #272c31;">
                 <div class="text-center mt-4">
-                    <img th:src="@{${song.coverUrl}}" class="img-fluid rounded" alt="Song Image" />
+                    <img th:src="@{${song.album.coverUrl}}" class="img-fluid rounded mb-3 w-25" alt="Song Image" />
                 </div>
                 <h2 class="mb-3">
-                    <strong>Song: </strong><span th:text="${song.title}">Song Title</span>
+                    <strong><span th:text="${song.title}">Song Title</span></strong>
                 </h2>
-                <p>
-                    <strong>Artist: </strong>
-                    <span th:text="${artist.name}">Artist Name</span>
-                    <a th:href="@{/artists/{id}(id=${artist.id})}" class="btn btn-outline-info btn-sm ms-2">
-                        Vedi artista
-                    </a>
+                <p><strong>Artisti:</strong>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span th:each="artist : ${song.artists}"
+                              th:text="${artist.name}"
+                              class="badge bg-primary text-white p-2"
+                              th:onclick="|window.location.href='@{/artists/{id}(id=${artist.id})}'|"
+                              style="cursor: pointer;">
+                        </span>
+                    </div>
+                    
+
                 </p>
+
+                <p>
                 <p>
                     <strong>Album: </strong>
-                    <span th:text="${album.title}">Album Name</span>
-                    <a th:href="@{/albums/{id}(id=${album.id})}" class="btn btn-outline-info btn-sm ms-2">
+                    <span th:if="${album != null}" th:text="${album.title}">Album Name</span>
+                    <a th:if="${album != null}" th:href="@{/albums/{id}(id=${album.id})}"
+                        class="btn btn-outline-info btn-sm ms-2">
                         Vedi album
                     </a>
+                    <span th:if="${album == null}">Album non disponibile</span>
                 </p>
-                <p><strong>Released Year: </strong><span th:text="${album.releaseDate.year}">Release Date</span></p>
 
-                <p><strong>Genres: </strong><span>[[*{genres}]]</span></p>
+                </p>
+                <p><strong>Anno di pubblicazione: </strong><span th:text="${song.album.releaseDate.year}">Release Date</span>
+                </p>
 
-                
+                <p><strong>Generi: </strong><span>[[*{genres}]]</span></p>
+
+
             </div>
 
         </div>
@@ -55,7 +67,7 @@
     </main>
 
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
-
+    <th:block th:replace="~{fragments/resources :: scripts}"></th:block>
 </body>
 
 </html>

@@ -33,7 +33,7 @@ public class Album {
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval=true helps clean up songs if removed from the list
     @JsonIgnore
-    @Valid // Enable validation for nested Song objects
+    @Valid 
     private List<Song> songs;
 
     @ManyToMany
@@ -42,6 +42,7 @@ public class Album {
         joinColumns = @JoinColumn(name = "album_id"),
         inverseJoinColumns = @JoinColumn(name = "artist_id")
     )
+    @NotEmpty(message = "Devi selezionare almeno un artista per l' album")
     private List<Artist> artists;
     
 
@@ -124,4 +125,5 @@ public class Album {
         }
         return artists.toString().replaceAll("[\\[\\]]", "");
     }
+    
 }

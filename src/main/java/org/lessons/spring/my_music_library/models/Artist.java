@@ -30,6 +30,9 @@ public class Artist {
     @ManyToMany(mappedBy = "artists")
     private List<Album> albums;
     
+    
+    @ManyToMany(mappedBy = "artists")
+    private List<Song> songs;
 
     // Getters & Setters
     public Integer getId() {
@@ -72,4 +75,11 @@ public class Artist {
         this.albums = albums;
     }
 
+    public List<Song> getSongs() {
+        return this.songs;
+    }
+
+    public void setSongs(List<Song> songs) {
+        this.songs = songs;
+    }
 }

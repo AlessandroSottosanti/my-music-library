@@ -34,22 +34,27 @@
                 <input type="text" th:field="*{coverUrl}" class="form-control">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 container row">
                 <label class="form-label">Artisti</label>
-                <div th:each="artist : ${artists}" class="form-check">
+                <span th:each="artist : ${artists}" class="form-check mb-3 d-flex col-3">
                     <input type="checkbox" class="form-check-input" th:id="|artist-${artist.id}|"
                         th:value="${artist.id}" th:field="*{artists}">
-                    <label class="form-check-label" th:for="|artist-${artist.id}|" th:text="${artist.name}"></label>
+                    <label class="form-check-label ms-2" th:for="|artist-${artist.id}|" th:text="${artist.name}"></label>
+                </span>
+                <!-- Visualizza messaggio di errore se la lista degli artisti è vuota -->
+                <div th:if="${#fields.hasErrors('artists')}" class="text-danger mb-3">
+                    <span th:errors="*{artists}"></span>
                 </div>
             </div>
+            
 
-            <div class="mb-3">
+            <div class="mb-3 container row">
                 <label class="form-label">Generi</label>
-                <div th:each="genre : ${genres}" class="form-check mb-3">
+                <span th:each="genre : ${genres}" class="form-check mb-3 d-flex col-3">
                     <input class="form-check-input" type="checkbox" th:field="*{genres}" th:value="${genre.id}"
                         th:id="|genre-${genre.id}|" />
-                    <label class="form-check-label" th:for="|genre-${genre.id}|" th:text="${genre.name}">Genere</label>
-                </div>
+                    <label class="form-check-label ms-2" th:for="|genre-${genre.id}|" th:text="${genre.name}">Genere</label>
+                </span>
             </div>
 
             <!-- Sezione per aggiungere canzoni -->
@@ -57,30 +62,44 @@
                 <h4>Aggiungi Canzoni all'Album</h4>
                 <div th:each="song, stat : *{songs}" class="mb-3 p-2 border-bottom">
                     <h5>Canzone #<span th:text="${stat.count}"></span></h5>
-                    
+
                     <!-- Song Title -->
                     <div class="mb-2">
                         <label th:for="|songTitle${stat.index}|" class="form-label">Titolo Canzone</label>
-                        <input type="text" th:field="*{songs[__${stat.index}__].title}" class="form-control" th:id="|songTitle${stat.index}|">
+                        <input type="text" th:field="*{songs[__${stat.index}__].title}" class="form-control"
+                            th:id="|songTitle${stat.index}|">
                         <!-- Basic validation message placeholder (full validation requires more setup) -->
-                         <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].title')}" th:errors="*{songs[__${stat.index}__].title}"></div>
+                        <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].title')}"
+                            th:errors="*{songs[__${stat.index}__].title}"></div>
                     </div>
-                    
+
                     <!-- Song Duration -->
                     <div class="mb-2">
                         <label th:for="|songDuration${stat.index}|" class="form-label">Durata (secondi)</label>
-                        <input type="number" th:field="*{songs[__${stat.index}__].duration}" class="form-control" min="10" max="900" th:id="|songDuration${stat.index}|">
-                         <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].duration')}" th:errors="*{songs[__${stat.index}__].duration}"></div>
+                        <input type="number" th:field="*{songs[__${stat.index}__].duration}" class="form-control"
+                            min="10" max="900" th:id="|songDuration${stat.index}|">
+                        <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].duration')}"
+                            th:errors="*{songs[__${stat.index}__].duration}"></div>
                     </div>
-                    
+
                     <!-- Hidden field for song ID (useful for potential future edit functionality) -->
                     <input type="hidden" th:field="*{songs[__${stat.index}__].id}" />
+
+                    <!--rimuovere la canzone -->
+                    <button type="submit" name="action" th:value="|removeSong${stat.index}|" class="btn btn-danger">
+                        <strong>X</strong> Rimuovi canzone
+                    </button>
                 </div>
-                <small class="form-text text-white">Inserisci i dettagli per le canzoni che vuoi creare insieme all'album. Lascia vuoti i campi delle canzoni che non vuoi aggiungere.</small>
+                <small class="form-text text-white">Inserisci i dettagli per le canzoni che vuoi creare insieme
+                    all'album.</small>
+
+                <div class="mt-3">
+                    <button type="submit" name="action" value="addSong" class="btn btn-primary">+ Aggiungi canzone</button>
+                </div>
             </div>
             <!-- Fine Sezione Canzoni -->
 
-            <button type="submit"  value="saveAlbum" class="btn btn-success">Salva Album e Canzoni</button>
+            <button type="submit" value="saveAlbum" class="btn btn-success">Salva Album e Canzoni</button>
             <a th:href="@{/albums}" class="btn btn-secondary">Annulla</a>
         </form>
     </div>

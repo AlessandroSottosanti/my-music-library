@@ -19,9 +19,14 @@ public class Song {
     @Size(max = 100, message = "Il titolo non può superare i 100 caratteri")
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "artist_id")
-    private Artist artist;
+    @ManyToMany
+    @JoinTable(
+        name = "song_artist", 
+        joinColumns = @JoinColumn(name = "song_id"), 
+        inverseJoinColumns = @JoinColumn(name = "artist_id")
+    )
+    @NotEmpty(message = "Seleziona almeno un artista")
+    private List<Artist> artists;
 
     @NotNull(message = "La durata è obbligatoria")
     @Min(value = 10, message = "La durata deve essere di almeno 10 secondi")
@@ -59,14 +64,6 @@ public class Song {
         this.title = title;
     }
 
-    public Artist getArtist() {
-        return this.artist;
-    }
-
-    public void setArtist(Artist artist) {
-        this.artist = artist;
-    }
-
     public Integer getDuration() {
         return this.duration;
     }
@@ -89,6 +86,14 @@ public class Song {
 
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
+    }
+
+    public List<Artist> getArtists() {
+        return artists;
+    }
+
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
     }
 
     public String getGenresAsString() {

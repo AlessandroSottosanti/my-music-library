@@ -19,12 +19,6 @@
             <div class="invalid-feedback" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}">Errore durata</div>
         </div>
 
-        <!-- Cover URL -->
-        <div class="mb-3">
-            <label for="coverUrl" class="form-label">URL Copertina</label>
-            <input type="url" th:field="*{coverUrl}" class="form-control"/>
-        </div>
-
         <!-- Album -->
         <div class="mb-3">
             <label for="album" class="form-label"></label>
@@ -34,14 +28,17 @@
         </div>
 
         <!-- Artista -->
-        <div class="mb-3">
-            <label for="artist" class="form-label">Artista</label>
-            <select th:field="*{artist}" class="form-select">
-                <option th:each="artist : ${artists}" th:value="${artist.id}" th:text="${artist.name}">Artista</option>
-            </select>
-        </div>
+            <label class="form-label mb-3">Artisti</label>
+            <div th:each="artist : ${artists}" class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" th:id="|artist-${artist.id}|"
+                       th:value="${artist.id}" th:field="*{artists}">
+                <label class="form-check-label" th:for="|artist-${artist.id}|" th:text="${artist.name}"></label>
+            </div>
+            <div class="text-danger" th:if="${#fields.hasErrors('artists')}" th:errors="*{artists}"></div>
+        
 
         <!-- Generi -->
+        <label class="form-label">Generi</label>
         <div th:each="genre : ${genres}" class="form-check mb-3">
             <input class="form-check-input" type="checkbox"
                    th:field="*{genres}" th:value="${genre.id}" th:id="|genre-${genre.id}|" />
