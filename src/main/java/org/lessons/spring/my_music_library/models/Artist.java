@@ -1,9 +1,6 @@
 package org.lessons.spring.my_music_library.models;
 
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 

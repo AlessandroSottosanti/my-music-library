@@ -52,12 +52,12 @@
                 </div>
             </div>
 
-            <!-- Sezione per modificare / aggiungere canzoni -->
+            <!-- Sezione per visualizzare e modificare le canzoni esistenti -->
             <div id="songs-section" class="my-4 p-3 border rounded">
                 <input type="hidden" name="_anchor" value="songs-section" />
 
-                <h4>Modifica Canzoni dell'Album</h4>
-                <div th:each="song, stat : *{getSongs()}" class="mb-3 p-2 border-bottom">
+                <h4>Canzoni dell'Album</h4>
+                <div th:each="song, stat : ${album.songs}" class="mb-3 p-2 border-bottom">
                     <h5>Canzone #<span th:text="${stat.count}"></span></h5>
 
                     <div class="mb-2">
@@ -77,13 +77,17 @@
                     </div>
 
                     <input type="hidden" th:field="*{songs[__${stat.index}__].id}" />
+                    <!-- rimuovere la canzone -->
+                    <button type="submit" name="action" th:value="|removeSong${stat.index}|" class="btn btn-danger">
+                        <strong>X</strong> Rimuovi canzone
+                    </button>
                 </div>
 
+                <!-- Aggiungi una nuova canzone -->
                 <button type="submit" name="action" value="addSong" class="btn btn-outline-light mt-3">
                     Aggiungi Canzone
                 </button>
             </div>
-
 
             <button type="submit" class="btn btn-primary">Aggiorna</button>
             <a th:href="@{/albums}" class="btn btn-secondary">Annulla</a>

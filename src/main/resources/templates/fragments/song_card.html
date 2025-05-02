@@ -3,7 +3,7 @@
     <div class="card bg-dark text-white h-100 shadow-sm border-0"
         th:attr="onclick=|window.location.href='/songs/${song.id}'|"
         style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
-        <img th:src="@{song.getAlbum().coverUrl}" class="card-img-top" alt="Copertina">
+        <img th:src="@{${song.album.coverUrl}}" class="card-img-top" alt="Copertina">
         <div class="card-body">
             <h5 class="card-title" th:text="${song.title}">Titolo</h5>
             <!-- Action Buttons -->
