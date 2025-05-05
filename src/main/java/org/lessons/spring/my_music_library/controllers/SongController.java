@@ -45,20 +45,21 @@ public class SongController {
 
     @GetMapping
     public String index(
-            @RequestParam(name = "query", required = false) String query,
+            @RequestParam(name = "keyword", required = false) String keyword, // Changed parameter name from query to keyword
             Model model,
             HttpServletRequest request) {
         List<Song> songs;
-        if (query != null && !query.isEmpty()) {
-            songs = songRepository.findAll();
-            // .findByTitleContainingIgnoreCaseOrGenreContainingIgnoreCaseOrArtistContainingIgnoreCaseOrAlbumContainingIgnoreCase(
-            // query, query, query, query);
+        if (keyword != null && !keyword.isEmpty()) {
+            // Use the new repository method to search by title
+            songs = songRepository.findByTitleContainingIgnoreCase(keyword);
         } else {
+            // If no keyword, get all songs
             songs = songRepository.findAll();
         }
 
         model.addAttribute("currentUri", request.getRequestURI());
         model.addAttribute("songs", songs);
+        model.addAttribute("keyword", keyword); // Pass the keyword back to the view
         return "songs/index";
     }
 

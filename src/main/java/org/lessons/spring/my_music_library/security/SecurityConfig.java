@@ -17,26 +17,24 @@ public class SecurityConfig {
     @SuppressWarnings("removal")
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests()
+                .authorizeHttpRequests()
                 .requestMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/songs/**", "/artists/**", "/albums/**", "/genres/**").hasAuthority("ADMIN")
-                .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/api/**").permitAll()    // da configurare auth user
                 .anyRequest().authenticated()
-            .and()
-            .formLogin()
-                .defaultSuccessUrl("/albums", true)
+                .and()
+                .formLogin()
+                .defaultSuccessUrl("/songs", true)
                 .permitAll()
-            .and()
-            .logout()
+                .and()
+                .logout()
                 .permitAll()
-            .and()
-            .exceptionHandling()
-                .accessDeniedPage("/error/403")  // <-- questa è la riga importante
-            .and()
-            .csrf().disable();
-
-
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/error/403")
+                .and()
+                .csrf().disable() // disabilitato per semplificare l'accesso API REST
+                .httpBasic(); // <--- ABILITA BASIC AUTH per client esterni come Postman o fetch()
         return http.build();
     }
 

@@ -48,9 +48,17 @@ public class ArtistController {
     private AlbumRepository albumRepository;
 
     @GetMapping()
-    public String index(Model model) {
-        List<Artist> artists = artistRepository.findAll();
+    public String index(@RequestParam(name = "keyword", required = false) String keyword, Model model) { // Add keyword parameter
+        List<Artist> artists;
+        if (keyword != null && !keyword.isEmpty()) {
+            // Use the new repository method to search by name
+            artists = artistRepository.findByNameContainingIgnoreCase(keyword);
+        } else {
+            // If no keyword, get all artists
+            artists = artistRepository.findAll();
+        }
         model.addAttribute("artists", artists);
+        model.addAttribute("keyword", keyword); // Pass the keyword back to the view
         return "artists/index";
     }
 

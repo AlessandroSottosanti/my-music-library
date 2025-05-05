@@ -18,10 +18,17 @@
                 <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
             </div>
 
+            <!-- Mostra errori generici -->
+            <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Errore generico</p>
+            </div>
+            
             <div class="mb-3">
                 <label for="description" class="form-label">Descrizione</label>
                 <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+                <div class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
             </div>
+
 
             <div class="mb-3">
                 <label for="releaseDate" class="form-label">Data di rilascio</label>
@@ -32,6 +39,7 @@
             <div class="mb-3">
                 <label for="coverUrl" class="form-label">URL Copertina</label>
                 <input type="text" th:field="*{coverUrl}" class="form-control">
+                <div class="text-danger" th:if="${#fields.hasErrors('coverUrl')}" th:errors="*{coverUrl}"></div>
             </div>
 
             <div class="mb-3 container row">
@@ -39,22 +47,27 @@
                 <span th:each="artist : ${artists}" class="form-check mb-3 d-flex col-3">
                     <input type="checkbox" class="form-check-input" th:id="|artist-${artist.id}|"
                         th:value="${artist.id}" th:field="*{artists}">
-                    <label class="form-check-label ms-2" th:for="|artist-${artist.id}|" th:text="${artist.name}"></label>
+                    <label class="form-check-label ms-2" th:for="|artist-${artist.id}|"
+                        th:text="${artist.name}"></label>
                 </span>
                 <!-- Visualizza messaggio di errore se la lista degli artisti è vuota -->
                 <div th:if="${#fields.hasErrors('artists')}" class="text-danger mb-3">
                     <span th:errors="*{artists}"></span>
                 </div>
             </div>
-            
+
 
             <div class="mb-3 container row">
                 <label class="form-label">Generi</label>
                 <span th:each="genre : ${genres}" class="form-check mb-3 d-flex col-3">
                     <input class="form-check-input" type="checkbox" th:field="*{genres}" th:value="${genre.id}"
                         th:id="|genre-${genre.id}|" />
-                    <label class="form-check-label ms-2" th:for="|genre-${genre.id}|" th:text="${genre.name}">Genere</label>
+                    <label class="form-check-label ms-2" th:for="|genre-${genre.id}|"
+                        th:text="${genre.name}">Genere</label>
                 </span>
+                <div th:if="${#fields.hasErrors('genres')}" class="text-danger mb-3">
+                    <span th:errors="*{genres}"></span>
+                </div>
             </div>
 
             <!-- Sezione per aggiungere canzoni -->
@@ -82,9 +95,6 @@
                             th:errors="*{songs[__${stat.index}__].duration}"></div>
                     </div>
 
-                    <!-- Hidden field for song ID (useful for potential future edit functionality) -->
-                    <input type="hidden" th:field="*{songs[__${stat.index}__].id}" />
-
                     <!--rimuovere la canzone -->
                     <button type="submit" name="action" th:value="|removeSong${stat.index}|" class="btn btn-danger">
                         <strong>X</strong> Rimuovi canzone
@@ -94,7 +104,8 @@
                     all'album.</small>
 
                 <div class="mt-3">
-                    <button type="submit" name="action" value="addSong" class="btn btn-primary">+ Aggiungi canzone</button>
+                    <button type="submit" name="action" value="addSong" class="btn btn-primary">+ Aggiungi
+                        canzone</button>
                 </div>
             </div>
             <!-- Fine Sezione Canzoni -->

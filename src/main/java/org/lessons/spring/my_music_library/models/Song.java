@@ -3,6 +3,7 @@ package org.lessons.spring.my_music_library.models;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -20,11 +21,7 @@ public class Song {
     private String title;
 
     @ManyToMany
-    @JoinTable(
-        name = "song_artist", 
-        joinColumns = @JoinColumn(name = "song_id"), 
-        inverseJoinColumns = @JoinColumn(name = "artist_id")
-    )
+    @JoinTable(name = "song_artist", joinColumns = @JoinColumn(name = "song_id"), inverseJoinColumns = @JoinColumn(name = "artist_id"))
     @NotEmpty(message = "Seleziona almeno un artista")
     private List<Artist> artists;
 
@@ -35,15 +32,11 @@ public class Song {
 
     @ManyToOne
     @JoinColumn(name = "album_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({ "artists", "songs", "genres" })
     private Album album;
 
     @ManyToMany
-    @JoinTable(
-        name = "song_genre", 
-        joinColumns = @JoinColumn(name = "song_id"), 
-        inverseJoinColumns = @JoinColumn(name = "genre_id")
-    )
+    @JoinTable(name = "song_genre", joinColumns = @JoinColumn(name = "song_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
     // Getter e Setter

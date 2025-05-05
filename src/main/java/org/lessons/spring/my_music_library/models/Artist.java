@@ -1,6 +1,9 @@
 package org.lessons.spring.my_music_library.models;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -25,6 +28,7 @@ public class Artist {
     private String imageUrl;
 
     @ManyToMany(mappedBy = "artists")
+    @JsonIgnoreProperties({"artists", "songs", "genres"}) 
     private List<Album> albums;
     
     

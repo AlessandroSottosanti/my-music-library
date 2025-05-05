@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "albums")
@@ -43,6 +44,7 @@ public class Album {
         inverseJoinColumns = @JoinColumn(name = "artist_id")
     )
     @NotEmpty(message = "Devi selezionare almeno un artista per l' album")
+    @JsonIgnoreProperties({"albums", "songs"})
     private List<Artist> artists;
     
 
