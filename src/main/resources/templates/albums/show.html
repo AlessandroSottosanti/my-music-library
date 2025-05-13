@@ -16,6 +16,12 @@
         <div class="container mt-5">
             <h1 th:text="${album.title}">Titolo Album</h1>
 
+            <div class="d-flex justify-content-end mb-3">
+                <a th:href="@{/albums/edit/{id}(id=${album.id})}" class="btn btn-warning text-white">
+                    <i class="bi bi-pencil-square"></i> Modifica
+                </a>
+            </div>
+
             <div class="row mt-4">
                 <!-- Copertina -->
                 <div class="col-md-4">

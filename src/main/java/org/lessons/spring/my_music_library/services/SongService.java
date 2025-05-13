@@ -35,4 +35,9 @@ public class SongService {
     public Boolean exists(Song song) {
         return existsById(song.getId());
     }
+
+    public List<Song> getSongsByAlbumId(Integer albumId) {
+    return songRepository.findByAlbumId(albumId);
+}
+
 }

@@ -83,4 +83,5 @@ public class Artist {
     public void setSongs(List<Song> songs) {
         this.songs = songs;
     }
+    
 }

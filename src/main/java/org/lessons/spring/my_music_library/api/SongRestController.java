@@ -30,8 +30,8 @@ public class SongRestController {
 
         // Restituisci la lista delle canzoni come DTO
         List<SongDTO> songDTOs = songs.stream()
-                                        .map(SongDTO::fromSong)
-                                        .collect(Collectors.toList());
+                .map(SongDTO::fromSong)
+                .collect(Collectors.toList());
 
         return new ResponseEntity<List<SongDTO>>(songDTOs, HttpStatus.OK);
     }
@@ -39,7 +39,7 @@ public class SongRestController {
     @GetMapping("/{id}")
     public ResponseEntity<SongDTO> show(@PathVariable Integer id) {
         if (!songService.existsById(id)) {
-            return new ResponseEntity<SongDTO>(HttpStatus.NOT_FOUND);  
+            return new ResponseEntity<SongDTO>(HttpStatus.NOT_FOUND);
         }
 
         // Ottieni la canzone dal service e trasformala in DTO
@@ -49,6 +49,16 @@ public class SongRestController {
             return new ResponseEntity<SongDTO>(songDTO, HttpStatus.OK);
         }
 
-        return new ResponseEntity<SongDTO>(HttpStatus.NOT_FOUND); 
+        return new ResponseEntity<SongDTO>(HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/album/{albumId}")
+    public ResponseEntity<List<SongDTO>> getSongsByAlbum(@PathVariable Integer albumId) {
+        List<Song> songs = songService.getSongsByAlbumId(albumId);
+        List<SongDTO> songDTOs = songs.stream()
+                .map(SongDTO::fromSong)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(songDTOs, HttpStatus.OK);
+    }
+
 }

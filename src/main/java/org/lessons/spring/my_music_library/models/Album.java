@@ -32,9 +32,9 @@ public class Album {
     @Column(name = "cover_url")
     private String coverUrl;
 
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval=true helps clean up songs if removed from the list
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL) 
     @JsonIgnore
-    @Valid 
+    @Valid
     private List<Song> songs;
 
     @ManyToMany

@@ -41,18 +41,19 @@ INSERT INTO albums (id, title, description, release_date, cover_url) VALUES (11,
 INSERT INTO albums (id, title, description, release_date, cover_url) VALUES (12, 'One More Light', 'Seventh studio album by Linkin Park', '2017-05-19', 'https://m.media-amazon.com/images/I/41yOAfevc-L._UF1000,1000_QL80_.jpg');
 
 -- SONGS
-INSERT INTO songs (id, title, duration, album_id) VALUES (1, 'Come Together', 259, 1);
-INSERT INTO songs (id, title, duration, album_id) VALUES (2, 'Halo', 261, 2);
-INSERT INTO songs (id, title, duration, album_id) VALUES (3, 'So What', 544, 3);
-INSERT INTO songs (id, title, duration, album_id) VALUES (4, 'Wake Me Up', 300, 4);
-INSERT INTO songs (id, title, duration, album_id) VALUES (5, 'Ode to Joy', 300, 5);
-INSERT INTO songs (id, title, duration, album_id) VALUES (6, 'In the End', 216, 6);
-INSERT INTO songs (id, title, duration, album_id) VALUES (7, 'Numb', 185, 7);
-INSERT INTO songs (id, title, duration, album_id) VALUES (8, 'Bleed It Out', 163, 8);
-INSERT INTO songs (id, title, duration, album_id) VALUES (9, 'Waiting for the End', 231, 9);
-INSERT INTO songs (id, title, duration, album_id) VALUES (10, 'Burn It Down', 231, 10);
-INSERT INTO songs (id, title, duration, album_id) VALUES (11, 'Final Masquerade', 234, 11);
-INSERT INTO songs (id, title, duration, album_id) VALUES (12, 'Heavy', 155, 12);
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (1, 'Come Together', 259, 1, "https://music.youtube.com/watch?v=oolpPmuK2I8");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (2, 'Halo', 261, 2, "https://music.youtube.com/watch?v=VqQeT7wKqvs");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (3, 'So What', 544, 3, "https://music.youtube.com/watch?v=KJEzFvXx3Xw");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (4, 'Wake Me Up', 300, 4, "https://music.youtube.com/watch?v=2NiyrtYegso");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (5, 'Ode to Joy', 300, 5, "https://music.youtube.com/watch?v=C56aBZYsxko");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (6, 'In the End', 216, 6, "https://music.youtube.com/watch?v=BLZWkjBXfN8");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (7, 'Numb', 185, 7, "https://music.youtube.com/watch?v=5qZQEq_C3vc");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (8, 'Bleed It Out', 163, 8, "https://music.youtube.com/watch?v=83QdkHypPF8");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (9, 'Waiting for the End', 231, 9, "https://music.youtube.com/watch?v=9pEBaXlWqWE");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (10, 'Burn It Down', 231, 10, "https://music.youtube.com/watch?v=vIOO_7DLr3M");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (11, 'Final Masquerade', 234, 11, "https://music.youtube.com/watch?v=fCjf-zm4vbo");
+INSERT INTO songs (id, title, duration, album_id, song_url_yt) VALUES (12, 'Heavy', 155, 12, "https://music.youtube.com/watch?v=uEITghr7Rxg");
+
 
 -- ALBUM_ARTIST
 INSERT INTO album_artist (album_id, artist_id) VALUES (1, 1);

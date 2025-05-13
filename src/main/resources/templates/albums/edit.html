@@ -76,6 +76,14 @@
                             th:errors="*{songs[__${stat.index}__].duration}"></div>
                     </div>
 
+                    <div class="mb-2">
+                        <label th:for="|songUrlYt${stat.index}|" class="form-label">URL YouTube</label>
+                        <input type="text" th:field="*{songs[__${stat.index}__].songUrlYt}" class="form-control"
+                            th:id="|songUrlYt${stat.index}|">
+                        <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].songUrlYt')}"
+                            th:errors="*{songs[__${stat.index}__].songUrlYt}"></div>
+                    </div>
+
                     <input type="hidden" th:field="*{songs[__${stat.index}__].id}" />
                     <!-- rimuovere la canzone -->
                     <button type="submit" name="action" th:value="|removeSong${stat.index}|" class="btn btn-danger">

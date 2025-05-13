@@ -22,7 +22,6 @@ public class Song {
 
     @ManyToMany
     @JoinTable(name = "song_artist", joinColumns = @JoinColumn(name = "song_id"), inverseJoinColumns = @JoinColumn(name = "artist_id"))
-    @NotEmpty(message = "Seleziona almeno un artista")
     private List<Artist> artists;
 
     @NotNull(message = "La durata è obbligatoria")
@@ -38,6 +37,10 @@ public class Song {
     @ManyToMany
     @JoinTable(name = "song_genre", joinColumns = @JoinColumn(name = "song_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
+
+    @Column(name = "song_url_yt")
+    @NotBlank(message = "Va inserito l\'url di YouTube della canzone ")
+    private String songUrlYt;
 
     // Getter e Setter
 
@@ -94,6 +97,14 @@ public class Song {
             return "";
         }
         return genres.toString().replaceAll("[\\[\\]]", "");
+    }
+
+    public String getSongUrlYt() {
+        return songUrlYt;
+    }
+    
+    public void setSongUrlYt(String songUrlYt) {
+        this.songUrlYt = songUrlYt;
     }
 
 }

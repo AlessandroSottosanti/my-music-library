@@ -22,7 +22,7 @@
             <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
                 <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Errore generico</p>
             </div>
-            
+
             <div class="mb-3">
                 <label for="description" class="form-label">Descrizione</label>
                 <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
@@ -93,6 +93,15 @@
                             min="10" max="900" th:id="|songDuration${stat.index}|">
                         <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].duration')}"
                             th:errors="*{songs[__${stat.index}__].duration}"></div>
+                    </div>
+
+                    <!-- Song YouTube URL -->
+                    <div class="mb-2">
+                        <label th:for="|songUrlYt${stat.index}|" class="form-label">URL YouTube</label>
+                        <input type="text" th:field="*{songs[__${stat.index}__].songUrlYt}" class="form-control"
+                            th:id="|songUrlYt${stat.index}|">
+                        <div class="text-danger" th:if="${#fields.hasErrors('songs[__${stat.index}__].songUrlYt')}"
+                            th:errors="*{songs[__${stat.index}__].songUrlYt}"></div>
                     </div>
 
                     <!--rimuovere la canzone -->

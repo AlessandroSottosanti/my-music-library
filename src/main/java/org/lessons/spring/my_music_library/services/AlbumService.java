@@ -1,6 +1,5 @@
 package org.lessons.spring.my_music_library.services;
 import org.lessons.spring.my_music_library.models.Album;
-import org.lessons.spring.my_music_library.models.Artist;
 import org.lessons.spring.my_music_library.repositories.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,6 @@ package org.lessons.spring.my_music_library.api.dtos;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.lessons.spring.my_music_library.models.Album;
 import org.lessons.spring.my_music_library.models.Artist;
 import org.lessons.spring.my_music_library.models.Song;
 
@@ -12,7 +11,7 @@ public class ArtistDTO {
     private String name;
     private String biography;
     private String imageUrl;
-    private List<String> albumTitles;
+    private List<AlbumDTO> albums;
     private List<String> songTitles;
 
     // Costruttore statico di conversione da Artist
@@ -22,7 +21,7 @@ public class ArtistDTO {
         dto.name = artist.getName();
         dto.biography = artist.getBiography();
         dto.imageUrl = artist.getImageUrl();
-        dto.albumTitles = artist.getAlbums().stream().map(Album::getTitle).collect(Collectors.toList());
+        dto.albums = artist.getAlbums().stream().map(AlbumDTO::fromAlbum).collect(Collectors.toList());
         dto.songTitles = artist.getSongs().stream().map(Song::getTitle).collect(Collectors.toList());
         return dto;
     }
@@ -60,12 +59,12 @@ public class ArtistDTO {
         this.imageUrl = imageUrl;
     }
 
-    public List<String> getAlbumTitles() {
-        return albumTitles;
+    public List<AlbumDTO> getAlbums() {
+        return albums;
     }
 
-    public void setAlbumTitles(List<String> albumTitles) {
-        this.albumTitles = albumTitles;
+    public void setAlbums(List<AlbumDTO> albums) {
+        this.albums = albums;
     }
 
     public List<String> getSongTitles() {

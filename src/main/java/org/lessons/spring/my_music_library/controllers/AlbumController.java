@@ -10,7 +10,6 @@ import org.lessons.spring.my_music_library.models.Song;
 import org.lessons.spring.my_music_library.repositories.AlbumRepository;
 import org.lessons.spring.my_music_library.repositories.ArtistRepository;
 import org.lessons.spring.my_music_library.repositories.GenreRepository;
-import org.lessons.spring.my_music_library.repositories.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -19,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,9 +30,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/albums")
 public class AlbumController {
-
-    @Autowired
-    private SongRepository songRepository;
 
     @Autowired
     private ArtistRepository artistRepository;
@@ -183,7 +181,7 @@ public class AlbumController {
 
     @PostMapping("/edit/{id}")
     public String update(@PathVariable("id") Integer id,
-            @ModelAttribute("album") Album albumForm,
+            @Valid @ModelAttribute("album") Album albumForm,
             BindingResult bindingResult,
             @RequestParam(value = "action", required = false) String action,
             Model model) {
@@ -191,63 +189,54 @@ public class AlbumController {
         Album existingAlbum = albumRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Album not found"));
 
+        // Gestione aggiunta canzone
         if ("addSong".equals(action)) {
-            System.out.println("STO AGGIUNGENDO UNA CANZONE");
             albumForm.getSongs().add(new Song());
 
             model.addAttribute("album", albumForm);
             model.addAttribute("artists", artistRepository.findAll());
             model.addAttribute("genres", genreRepository.findAll());
-
             return "albums/edit";
         }
 
+        // Gestione rimozione canzone
         if (action != null && action.startsWith("removeSong")) {
             int index = Integer.parseInt(action.substring("removeSong".length()));
             if (index >= 0 && index < albumForm.getSongs().size()) {
                 albumForm.getSongs().remove(index);
             }
-            System.out.println("STO RIMUOVENDO UNA CANZONE");
 
             model.addAttribute("album", albumForm);
             model.addAttribute("artists", artistRepository.findAll());
             model.addAttribute("genres", genreRepository.findAll());
-
             return "albums/edit";
         }
 
-        if (albumForm.getArtists() != null && !albumForm.getArtists().isEmpty()) {
-            for (Song song : albumForm.getSongs()) {
-                song.setAlbum(albumForm);
-                song.setArtists(albumForm.getArtists());
-            }
-            System.out.println("Artisti associati a tutte le canzoni: ");
-            for (Song song : albumForm.getSongs()) {
-                System.out.println(
-                        "Canzone: " + song.getTitle() + ", Durata: " + song.getDuration() + " sec" + ", Artisti: ");
-                for (Artist artist : song.getArtists()) {
-                    System.out.println(artist.getName());
-                }
-            }
-        } else {
-            System.out.println("Non ci sono artisti associati all'album");
+        // Validazione
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("artists", artistRepository.findAll());
+            model.addAttribute("genres", genreRepository.findAll());
+            return "albums/edit";
         }
 
-        validator.validate(albumForm, bindingResult);
+        // Aggiorna proprietà dell'album
+        existingAlbum.setTitle(albumForm.getTitle());
+        existingAlbum.setDescription(albumForm.getDescription());
+        existingAlbum.setReleaseDate(albumForm.getReleaseDate());
+        existingAlbum.setCoverUrl(albumForm.getCoverUrl());
+        existingAlbum.setGenres(albumForm.getGenres());
+        existingAlbum.setArtists(albumForm.getArtists());
 
-        // Copia i campi modificabili
-        // existingAlbum.setTitle(albumForm.getTitle());
-        // existingAlbum.setDescription(albumForm.getDescription());
-        // existingAlbum.setReleaseDate(albumForm.getReleaseDate());
-        // existingAlbum.setCoverUrl(albumForm.getCoverUrl());
-        // existingAlbum.setGenres(albumForm.getGenres());
-        // existingAlbum.setArtists(albumForm.getArtists());
-        // existingAlbum.setSongs(albumForm.getSongs());
+        existingAlbum.setSongs(albumForm.getSongs());
+        for (Song song : existingAlbum.getSongs()) {
+            song.setAlbum(existingAlbum);
+            song.setGenres(existingAlbum.getGenres());
+            song.setArtists(existingAlbum.getArtists());
+        }
+        
 
-        System.out.println("STO SALVANDO");
-
-        albumRepository.save(albumForm);
-        return "redirect:/albums/" + albumForm.getId();
+        albumRepository.save(existingAlbum);
+        return "redirect:/albums/" + existingAlbum.getId();
     }
 
     @PostMapping("/delete/{id}")

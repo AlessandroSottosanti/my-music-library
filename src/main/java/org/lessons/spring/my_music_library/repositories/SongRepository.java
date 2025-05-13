@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SongRepository extends JpaRepository<Song, Integer> {
      // List<Song> findByTitleContainingIgnoreCaseOrGenreContainingIgnoreCaseOrArtistContainingIgnoreCaseOrAlbumContainingIgnoreCase(String title, String genre, String artist, String album);
      List<Song> findByTitleContainingIgnoreCase(String titleKeyword);
+     List<Song> findByAlbumId(Integer albumId);
+
 }

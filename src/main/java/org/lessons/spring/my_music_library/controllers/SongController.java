@@ -2,8 +2,6 @@ package org.lessons.spring.my_music_library.controllers;
 
 import java.util.List;
 
-import org.lessons.spring.my_music_library.models.Album;
-import org.lessons.spring.my_music_library.models.Artist;
 import org.lessons.spring.my_music_library.models.Song;
 import org.lessons.spring.my_music_library.repositories.AlbumRepository;
 import org.lessons.spring.my_music_library.repositories.ArtistRepository;
@@ -24,8 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-// Import RedirectAttributes if you plan to add flash messages for delete/update success
-// import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 @RequestMapping("/songs")
